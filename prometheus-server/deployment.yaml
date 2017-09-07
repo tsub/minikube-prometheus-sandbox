@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: prometheus-server
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: prometheus-server
+    spec:
+      containers:
+      - image: prom/prometheus:v1.7.1
+        name: prometheus-server
+        ports:
+        - containerPort: 9090
+        volumeMounts:
+        - name: prometheus-data
+          mountPath: /prometheus
+        - name: prometheus-config
+          mountPath: /etc/prometheus
+      volumes:
+      - name: prometheus-data
+        emptyDir: {}
+      - name: prometheus-config
+        configMap:
+          name: prometheus-server
